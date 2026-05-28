@@ -1,4 +1,4 @@
-name: "DEV DEPLOY"
+name: DEV DEPLOY
 
 on:
   push:
@@ -12,12 +12,17 @@ permissions:
 jobs:
   destroy-table:
     uses: ./.github/workflows/destroy-dynamo.yml
+
     with:
-      aws-assume-role-arn: "arn:aws:iam::788796860262:role/github-actions-dheimy00-pipeline"
-      aws-region: "us-east-2"
+      aws-assume-role-arn: arn:aws:iam::788796860262:role/github-actions-dheimy00-pipeline
+      aws-region: us-east-2
 
   recreate-dynamo:
+    needs:
+      - destroy-table
+
     uses: ./.github/workflows/recreate-dynamo.yml
+
     with:
-      aws-assume-role-arn: "arn:aws:iam::788796860262:role/github-actions-dheimy00-pipeline"
-      aws-region: "us-east-2"
+      aws-assume-role-arn: arn:aws:iam::788796860262:role/github-actions-dheimy00-pipeline
+      aws-region: us-east-2

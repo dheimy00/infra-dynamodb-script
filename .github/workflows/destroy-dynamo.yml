@@ -1,35 +1,37 @@
-name: "destroy-dynamo"
+name: destroy-dynamo
 
 on:
   workflow_call:
     inputs:
       aws-assume-role-arn:
-        type: string
         required: true
+        type: string
+
       aws-region:
-        type: string
         required: true
-        
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
-  terraform:
+  destroy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ inputs.aws-assume-role-arn }}
-          role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ inputs.aws-region }}
 
-      - name: Execute destroy script
-            run: |
-              chmod +x infra/scripts/*.sh
-              cd infra
-              make destroy
+      - name: Destroy table
+        run: |
+
+          chmod +x infra/scripts/*.sh
+
+          ./infra/scripts/destroy-table.sh

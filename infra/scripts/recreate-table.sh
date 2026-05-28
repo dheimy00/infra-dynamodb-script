@@ -2,6 +2,8 @@
 
 set -e
 
-./scripts/destroy-table.sh
-./scripts/create-table.sh
-./scripts/seed.sh
+./infra/scripts/destroy-table.sh
+
+./infra/scripts/create-table.sh
+
+./infra/scripts/seed.sh
